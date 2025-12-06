@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Craft Shop</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    html {
+  scroll-behavior: smooth;
+}
+/* ================= NAVBAR ================= */
+.navbar{
+  width:100%;
+  padding:12px 24px;
+  background:rgb(255, 255, 255);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:9999;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.nav-brand{
+  font-weight:700;
+  font-size:20px;
+  color:var(--pink-dark);
+}
+
+.nav-links{
+  list-style:none;
+  display:flex;
+  gap:20px;
+  margin:0;
+  padding:0;
+}
+
+.nav-links a{
+  text-decoration:none;
+  font-weight:600;
+  color:#555;
+  transition:.2s;
+}
+
+.nav-links a:hover{
+  color:var(--pink-dark);
+}
+
+.nav-cart{
+  background:var(--pink);
+  border:0;
+  color:white;
+  padding:8px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:600;
+}
+    :root{
+      --pink:#ffb6d2;
+      --pink-dark:#ff80bb;
+      --muted:#9b98a6;
+      --card-bg:#fff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Quicksand",sans-serif;
+      background:linear-gradient(180deg,#fff,#fff7fc);
+    }
+    .nav-links a.active {
+  color: var(--pink-dark);
+  font-weight: 700;
+}
+.navbar {
+  position: sticky;
+  top: 0;
+}
+
+    /* =============== LAYOUT ================= */
+    .container{
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+      display:flex;
+      gap:24px;
+      align-items:flex-start;
+    }
+    .main{flex:1}
+    aside.sidebar{
+      width:300px;
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      box-shadow:0 6px 16px rgba(126, 115, 115, 0.1);
+      position:sticky;
+      top:15px;
+    }
+
+    /* =============== HEADER ================= */
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:14px;
+      background:linear-gradient(135deg,var(--pink),var(--pink-dark));
+      display:flex;align-items:center;justify-content:center;
+      font-weight:bold;color:rgb(255, 255, 255);font-size:20px;
+    }
+
+    /* Search */
+    .search{
+      display:flex;align-items:center;
+      background:white;padding:8px 12px;border-radius:50px;
+      gap:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+    .search input{
+      border:0;outline:0;width:100%;
+    }
+
+    /* =============== PRODUCTS ================= */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:16px;
+    }
+    .card{
+      background:rgb(255, 255, 255);border-radius:12px;padding:12px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.08);
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .thumb{
+      height:150px;border-radius:10px;overflow:hidden;
+      background:#1f1e1e;
+    }
+    .thumb img{
+      width:100%;height:100%;object-fit:cover;
+    }
+    .price{color:var(--pink-dark);font-weight:700;}
+
+    .card-footer{
+      display:flex;justify-content:space-between;
+      align-items:center;margin-top:auto;
+    }
+    .btn{
+      padding:8px 12px;border-radius:999px;
+      border:0;cursor:pointer;font-weight:600;
+    }
+    .btn.main{background:var(--pink);color:rgb(255, 255, 255);}
+    .btn.ghost{
+      background:rgb(255, 255, 255);border:1px solid #ffd5e6;color:var(--pink-dark);
+    }
+
+    /* =============== CART ================= */
+    .cart-panel{
+      position:fixed;right:-350px;top:0;
+      width:320px;height:100%;background:white;
+      box-shadow:-4px 0 20px rgba(0,0,0,0.2);
+      padding:20px;transition:.3s;overflow-y:auto;
+      z-index:1000;
+    }
+    .cart-panel.open{right:0;}
+    .cart-item{
+      display:flex;gap:12px;margin-bottom:12px;
+      background:#fff2f9;padding:10px;border-radius:10px;
+    }
+    .cart-item img{
+      width:64px;height:64px;border-radius:8px;object-fit:cover;
+    }
+
+    /* =============== MODAL (View Product) ================= */
+    .modal{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.6);display:none;
+      justify-content:center;align-items:center;z-index:999;
+    }
+    .modal-content{
+      background:white;border-radius:12px;padding:20px;
+      width:350px;box-shadow:0 6px 20px rgba(213, 255, 158, 0.2);
+    }
+    .modal.show{display:flex;}
+
+    /* ================= FOOTER ================= */
+.footer{
+  margin-top:50px;
+  background:linear-gradient(135deg, var(--pink), var(--pink-dark));
+  padding:30px 20px;
+  color:white;
+  text-align:center;
+  border-radius:20px 20px 0 0;
+}
+
+.footer h2{
+  margin-top:0;
+  font-size:22px;
+  font-weight:700;
+}
+
+.footer p{
+  margin:6px 0;
+  font-size:15px;
+}
+
+.footer small{
+  opacity:0.8;
+}
+  </style>
+</head>
+
+<body>
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <div class="brand">
+    <div class="header">
+      <div class="brand">
+        <div class= "logo">🧶</div>
+        <div>
+          <h2 style="margin:0;">⋆˚𝜗𝑪𝒓𝒂𝒇𝒕 𝑺𝒕𝒐𝒓𝒆𝜚˚⋆</h2>
+          <small style="color:gray;">𝙷𝚊𝚗𝚍𝚖𝚊𝚍𝚎 𝙲𝚛𝚘𝚌𝚑𝚎𝚝 𝚂𝚑𝚘𝚙</small>
+        </div>
+      </div>
+      <div class="search">
+        <input id="search" placeholder="Search..." />
+        <button class="btn ghost" onclick="resetSearch()">Reset</button>
+      </div>
+
+       <button class="nav-cart" onclick="toggleCart()">🛒</button>
+    </div>
+</nav>
+
+<!-- ================= CART PANEL ================= -->
+<div class="cart-panel" id="cartPanel">
+  <h2>Keranjang</h2>
+  <div id="cartItems"></div>
+  <hr>
+  <h3>Total: <span id="cartTotal">0</span></h3>
+  <button class="btn main" onclick="checkout()">Checkout (WhatsApp)</button>
+</div>
+
+<!-- ================= MODAL DETAIL ================= -->
+<div class="modal" id="productModal">
+  <div class="modal-content"> 
+    <h2 id="modalTitle"></h2>
+    <img id="modalImg" style="width:100%;height:200px;object-fit:cover;border-radius:8px;margin:12px 0;">
+    <p><strong>Kategori:</strong> <span id="modalCat"></span></p>
+    <p><strong>Harga:</strong> IDR <span id="modalPrice"></span></p>
+    <p><strong>Stok:</strong> <span id="modalStock"></span></p>
+    <button class="btn main" onclick="addToCart(modalProductId)">Tambah ke keranjang</button>
+    <button class="btn ghost" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <p>Showing <span id="count"></span> product items</p>
+
+    <div class="grid" id="productGrid"></div>
+  </main>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <h3>Filters</h3><br>
+
+    <strong>Category</strong><br><br>
+    <div id="categories" style="display:flex;flex-wrap:wrap;gap:8px;">
+      <button class="chip active" data-cat="All">All</button>
+      <button class="chip" data-cat="Keychain">Keychains</button>
+      <button class="chip" data-cat="Hairclip">Hairclips</button>
+      <button class="chip" data-cat="Wallet">Wallet</button>
+    </div>
+
+    <br><br>
+    <button class="btn ghost" onclick="resetFilters()" style="width:100%;">Reset Filters</button>
+  </aside>
+</div>
+
+<script>
+/* ======================= PRODUCT DATA ======================= */
+const products = [
+  {
+    id:1,
+    title:"Pudicharm",
+    category:"Keychain",
+    price:30000,
+    stock:50,
+    img:"foodkeychain.jpg"
+  },
+  {
+    id:2,
+    title:"Anomali",
+    category:"Keychain", 
+    price:50000,
+    stock:50,
+    img:"pocong.jpg"
+  },
+  {
+    id:3,
+    title:"Strawberry Cat",
+    category:"Keychain",
+    price:30000,
+    stock:50,
+    img:"kucing.jpg"
+  },
+  {
+    id:4,
+    title:"Berry Clip",
+    category:"Hairclip",
+    price:40000,
+    stock:50,
+    img:"hairclip.jpg"
+  },
+  {
+    id:5,
+    title:"Mini Bow Hairpin",
+    category:"Hairclip", 
+    price:55000,
+    stock:50,
+    img:"coquettehairclip.jpg"
+  },
+  {
+    id:6,
+    title:"Flora Hairpin",
+    category:"Hairclip",
+    price:50000,
+    stock:50,
+    img:"flowerhairclip.jpg"
+  },
+  {
+    id:7,
+    title:"Fluffy Pocket",
+    category:"Wallet",
+    price:90000, 
+    stock:50,
+    img:"dompet1.jpg"
+  },
+  {
+    id:8,
+    title:"Apple Card Holder",
+    category:"Wallet",
+    price:70000,
+    stock:50,
+    img:"applewallet.jpg"
+  },
+  {
+    id:9,
+    title:"Lacy Wallet",
+    category:"Wallet",
+    price:50000,
+    stock:50,
+    img:"Card Wallet.jpg"
+  }
+];
+
+const productGrid = document.getElementById("productGrid");
+const countEl = document.getElementById("count");
+
+function formatNumber(n){
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+}
+
+/* ======================= RENDER ======================= */
+function renderList(list){
+  productGrid.innerHTML="";
+  list.forEach(p=>{
+    const card=document.createElement("div");
+    card.className="card";
+
+    card.innerHTML = `
+      <div class="thumb">
+        <img src="${p.img}">
+      </div>
+
+      <h3>${p.title}</h3>
+      <small style="color:gray">${p.category} • Stock: ${p.stock}</small>
+
+      <div class="card-footer">
+        <span class="price">IDR ${formatNumber(p.price)}</span>
+
+        <div style="display:flex;gap:6px;">
+          <button class="btn ghost" onclick="openModal(${p.id})">View</button>
+          <button class="btn main" onclick="addToCart(${p.id})">Add</button>
+        </div>
+      </div>
+    `;
+    productGrid.appendChild(card);
+  });
+  countEl.textContent = list.length;
+}
+
+renderList(products);
+
+/* ======================= SEARCH ======================= */
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("input", applyFilters);
+
+function resetSearch(){
+  search.value="";
+  applyFilters();
+}
+
+/* ======================= FILTER ======================= */
+const chips = document.querySelectorAll(".chip");
+
+chips.forEach(ch=>{
+  ch.onclick = ()=>{
+    chips.forEach(c=>c.classList.remove("active"));
+    ch.classList.add("active");
+    applyFilters();
+  };
+});
+
+function resetFilters(){
+  search.value="";
+  chips.forEach(c=>c.classList.remove("active"));
+  document.querySelector('.chip[data-cat="All"]').classList.add("active");
+  applyFilters();
+}
+
+function applyFilters(){
+  const s = searchInput.value.toLowerCase();
+  const cat = document.querySelector(".chip.active").dataset.cat;
+
+  const out = products.filter(p=>{
+    const matchName = p.title.toLowerCase().includes(s);
+    const matchCat = (cat==="All") || (p.category===cat);
+    return matchName && matchCat;
+  });
+
+  renderList(out);
+}
+
+/* ======================= VIEW PRODUCT (MODAL) ======================= */
+const modal=document.getElementById("productModal");
+let modalProductId=null;
+
+function openModal(id){
+  modal.classList.add("show");
+  const p = products.find(x=>x.id===id);
+  modalProductId=id;
+
+  document.getElementById("modalTitle").innerText=p.title;
+  document.getElementById("modalImg").src=p.img;
+  document.getElementById("modalCat").innerText=p.category;
+  document.getElementById("modalPrice").innerText=formatNumber(p.price);
+  document.getElementById("modalStock").innerText=p.stock;
+}
+
+function closeModal(){
+  modal.classList.remove("show");
+}
+
+/* ======================= CART ======================= */
+let cart = [];
+
+function addToCart(id){
+  const p = products.find(x=>x.id===id);
+
+  const exist = cart.find(x=>x.id===id);
+  if(exist) exist.qty++;
+  else cart.push({id:p.id,title:p.title,price:p.price,img:p.img,qty:1});
+
+  updateCart();
+}
+
+function updateCart(){
+  const box=document.getElementById("cartItems");
+  box.innerHTML="";
+
+  let total=0;
+
+  cart.forEach(c=>{
+    total += c.price * c.qty;
+    const item=document.createElement("div");
+    item.className="cart-item";
+
+    item.innerHTML=`
+      <img src="${c.img}">
+      <div style="flex:1;">
+        <strong>${c.title}</strong><br>
+        IDR ${formatNumber(c.price)} x ${c.qty}
+      </div>
+      <button onclick="removeItem(${c.id})" class="btn ghost">X</button>
+    `;
+    box.appendChild(item);
+  });
+
+  document.getElementById("cartTotal").innerText = formatNumber(total);
+}
+
+function removeItem(id){
+  cart=cart.filter(c=>c.id!==id);
+  updateCart();
+}
+
+function toggleCart(){
+  document.getElementById("cartPanel").classList.toggle("open");
+}
+
+/* ======================= CHECKOUT ======================= */
+function checkout() {
+  if (cart.length === 0) {
+    alert("Keranjang masih kosong!");
+    return;
+  }
+
+  let nomorWA = "6285892803457"; 
+
+  let pesan = "*Halo kak, saya ingin order:*%0A%0A";
+
+  cart.forEach(item => {
+    pesan += `• ${item.title} (${item.qty}x) - IDR ${formatNumber(item.price * item.qty)}%0A`;
+  });
+
+  let total = cart.reduce((a, b) => a + b.price * b.qty, 0);
+
+  pesan += `%0A*Total: IDR ${formatNumber(total)}*%0A%0A`;
+  pesan += "Mohon konfirmasinya ya kak ❤️";
+
+  let url = `https://wa.me/${nomorWA}?text=${pesan}`;
+
+  window.open(url, "_blank");
+}
+// ================= NAVBAR ACTIVE LINK =================
+const navLinks = document.querySelectorAll(".nav-links a");
+
+navLinks.forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.forEach(l => l.classList.remove("active"));
+    link.classList.add("active");
+  });
+});
+</script>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer"> 
+  <h2>Kontak</h2>
+
+  <p><strong>WhatsApp:</strong>+62858-9280-3457</p>
+  <p><strong>Instagram:</strong>@CraftStore_</p>
+
+  <br>
+  <small>© 2023 Craft Store</small>
+</footer>
+</body>
+</html>
